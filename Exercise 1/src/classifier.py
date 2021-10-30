@@ -2,7 +2,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 def clf_decisionTree(pp_data_training, random_state):
 	clf = DecisionTreeClassifier(random_state=random_state)
-	clf.fit(pp_data_training.iloc[:,:-1], pp_data_training.iloc[:,-1])
+	clf.fit(pp_data_training.iloc[:,1:-1], pp_data_training.iloc[:,-1])
 	return clf
 
 def clf_kNN():

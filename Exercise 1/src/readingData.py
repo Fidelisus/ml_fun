@@ -6,8 +6,9 @@ def rd_breastCancer(dataset_location, lines, testing_ratio, random_state):
 
 def rd_diabetes(dataset_location, lines, testing_ratio, random_state):
 	data = pd.read_csv(dataset_location+"diabetes.csv", nrows=lines)
+	data.insert(0, 'ID', range(len(data)))
 	data_training, data_testing = train_test_split(data, test_size=testing_ratio, random_state=random_state)
-	return data_training, data_testing,([],[],[],[1,2,3,4,5,6,7,8])
+	return data_training, data_testing, ([],[],[],[0,1,2,3,4,5,6,7])
 
 def rd_purchase(dataset_location, lines, testing_ratio, random_state):
 	pass

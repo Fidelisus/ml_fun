@@ -6,8 +6,8 @@ def pp_breastCancer(data, cols):
 	return pp_data
 
 def pp_diabetes(data, cols):
-	pp_data = data
-	return pp_data
+	data.iloc[:,-1] = data.iloc[:,-1].astype(bool)
+	return data
 
 def pp_purchase(data, cols):
 	pp_data = data
