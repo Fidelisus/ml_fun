@@ -51,7 +51,7 @@ def knn_optimal_parameters(pp_data_full):
 
     return knn.best_params_
 
-def clf_kNN(pp_data_training, pp_data_full, random_state):
+def clf_kNN(pp_data_training, pp_data_full, random_state, use_pca):
     # uncomment to search for the optimal parameters
     # knn_best_params = knn_optimal_parameters(pp_data_full)
 
@@ -150,7 +150,7 @@ def tree_optimal_parameters(pp_data_full, random_state):
 
     return tree.best_params_
 
-def clf_decisionTree(pp_data_training, pp_data_full, random_state):
+def clf_decisionTree(pp_data_training, pp_data_full, random_state, use_pca):
     # uncomment to search for the optimal parameters
     # tree_best_params = tree_optimal_parameters(pp_data_full, random_state)
     # print(tree_best_params)
