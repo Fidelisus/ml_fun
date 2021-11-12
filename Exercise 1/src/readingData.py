@@ -2,7 +2,9 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 def rd_breastCancer(dataset_location, lines, testing_ratio, random_state):
-	pass
+    df = pd.read_csv(dataset_location + "breast-cancer-diagnostic.shuf.lrn.csv")
+    data_training, data_testing = train_test_split(df, test_size=0.2, random_state=random_state)
+    return data_training, data_testing, None # None because everything is ratio data, so it is not needed
 
 def rd_diabetes(dataset_location, lines, testing_ratio, random_state):
 	data = pd.read_csv(dataset_location+"diabetes.csv", nrows=lines)
