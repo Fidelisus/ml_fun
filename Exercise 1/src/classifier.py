@@ -130,11 +130,11 @@ def tree_optimal_parameters(pp_data_full, random_state):
 
     params_tree = {
         'criterion': ['gini','entropy'],
-        'max_depth': range(3, 12),
+        'max_depth': range(1, 41),
         'splitter': ['best', 'random'],
-        'min_samples_split': np.arange(0.001, 0.15, 0.01).tolist(),
+        'min_samples_split': np.arange(0.001, 0.3, 0.01).tolist(),
         'random_state': [123],
-        # 'ccp_alpha': np.arange(0, 1, 0.1).tolist(),
+        # 'ccp_alpha': np.arange(0, 1, 0.001).tolist(),
     }
     grid_search_tree = GridSearchCV(estimator=tree_classifier, 
                     param_grid=params_tree, 
