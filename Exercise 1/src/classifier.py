@@ -99,10 +99,10 @@ def clf_naiveBayes(pp_data_training, pp_data_full, random_state):
     nb_optimal.fit(pp_data_training[0], pp_data_training[1])
     return nb_optimal
 
-def clf_optimal_parameters(pp_data_full, random_state):
-    clf_classifier = DecisionTreeClassifier()
+def tree_optimal_parameters(pp_data_full, random_state):
+    tree_classifier = DecisionTreeClassifier()
 
-    params_clf = {
+    params_tree = {
         'criterion': ['gini','entropy'],
         'max_depth': range(3, 12),
         'splitter': ['best', 'random'],
@@ -110,31 +110,31 @@ def clf_optimal_parameters(pp_data_full, random_state):
         'random_state': [123],
         # 'ccp_alpha': np.arange(0, 1, 0.1).tolist(),
     }
-    grid_search_clf = GridSearchCV(estimator=clf_classifier, 
-                    param_grid=params_clf, 
+    grid_search_tree = GridSearchCV(estimator=tree_classifier, 
+                    param_grid=params_tree, 
                     cv=10,
                     # verbose=1,
                     scoring='accuracy')
 
-    clf = grid_search_clf.fit(pp_data_full[0], pp_data_full[1])
+    tree = grid_search_tree.fit(pp_data_full[0], pp_data_full[1])
 
     # uncomment to get more stats
-    best_accuracy = clf.best_score_
+    best_accuracy = tree.best_score_
     print("Best accuracy from GridSearchCV", best_accuracy)
 
-    return clf.best_params_
+    return tree.best_params_
 
-def clf_decisionTree(pp_data_training, pp_data_full, random_state):
+def tree_decisionTree(pp_data_training, pp_data_full, random_state):
     # uncomment to search for the optimal parameters
-    # clf_best_params = clf_optimal_parameters(pp_data_full, random_state)
-    # print(clf_best_params)
+    # tree_best_params = tree_optimal_parameters(pp_data_full, random_state)
+    # print(tree_best_params)
 
     # optimal parameters for breastCancer
-    clf_best_params = {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
-    clf_optimal = DecisionTreeClassifier(**clf_best_params)
+    tree_best_params = {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
+    tree_optimal = DecisionTreeClassifier(**tree_best_params)
 
-    clf_optimal.fit(pp_data_training[0], pp_data_training[1])
-    return clf_optimal
+    tree_optimal.fit(pp_data_training[0], pp_data_training[1])
+    return tree_optimal
 
 def classify(classifierFunction, random_state, pp_data_training, pp_data_full):
 	return classifierFunction(pp_data_training, pp_data_full, random_state)
