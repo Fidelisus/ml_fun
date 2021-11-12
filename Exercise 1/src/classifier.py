@@ -2,6 +2,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
+from sklearn.pipeline import Pipeline
+from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -84,19 +86,43 @@ def nb_optimal_parameters(pp_data_full):
     # uncomment to get more stats
     best_accuracy = nb.best_score_
     print("Best accuracy from GridSearchCV", best_accuracy)
+    print(nb.best_params_)
     nb_plots(nb)
 
     return nb.best_params_
 
-def clf_naiveBayes(pp_data_training, pp_data_full, random_state):
-    # uncomment to search for the optimal parameters
-    # nb_best_params = nb_optimal_parameters(pp_data_full)
+def nb_pca(pp_data_training, pp_data_full):
+    pipe = Pipeline(steps=[
+                        ('pca', PCA()),
+                        ('estimator', GaussianNB()),
+                        ])
 
-    # optimal parameters for breastCancer
-    nb_best_params = {'var_smoothing': 0.278}
-    nb_optimal = GaussianNB(**nb_best_params)
+    parameters = {'estimator__var_smoothing': np.logspace(1,-10, num=100)}
+    nb = GridSearchCV(pipe, parameters, scoring='accuracy', cv=10).fit(pp_data_full[0], pp_data_full[1])
 
-    nb_optimal.fit(pp_data_training[0], pp_data_training[1])
+    print("Best accuracy from GridSearchCV", nb.best_score_)
+
+    best_params = nb.best_params_
+    print(best_params)
+    return {"var_smoothing": best_params["estimator__var_smoothing"]}
+
+
+def clf_naiveBayes(pp_data_training, pp_data_full, random_state, use_pca):
+    if use_pca:
+        nb_best_params = nb_pca(pp_data_training, pp_data_full)
+        # nb_best_params = {'var_smoothing': 0.0774263682681127}
+        pca = PCA()
+        nb_optimal = GaussianNB(**nb_best_params)
+        nb_optimal.fit(pca.fit_transform(pp_data_training[0]), pp_data_training[1])
+    else:
+        # uncomment to search for the optimal parameters
+        # nb_best_params = nb_optimal_parameters(pp_data_full)
+
+        # optimal parameters for breastCancer
+        nb_best_params = {'var_smoothing': 0.278}
+        nb_optimal = GaussianNB(**nb_best_params)
+
+        nb_optimal.fit(pp_data_training[0], pp_data_training[1])
     return nb_optimal
 
 def tree_optimal_parameters(pp_data_full, random_state):
@@ -124,7 +150,7 @@ def tree_optimal_parameters(pp_data_full, random_state):
 
     return tree.best_params_
 
-def tree_decisionTree(pp_data_training, pp_data_full, random_state):
+def clf_decisionTree(pp_data_training, pp_data_full, random_state):
     # uncomment to search for the optimal parameters
     # tree_best_params = tree_optimal_parameters(pp_data_full, random_state)
     # print(tree_best_params)
@@ -136,5 +162,5 @@ def tree_decisionTree(pp_data_training, pp_data_full, random_state):
     tree_optimal.fit(pp_data_training[0], pp_data_training[1])
     return tree_optimal
 
-def classify(classifierFunction, random_state, pp_data_training, pp_data_full):
-	return classifierFunction(pp_data_training, pp_data_full, random_state)
+def classify(classifierFunction, random_state, pp_data_training, pp_data_full, use_pca=False):
+	return classifierFunction(pp_data_training, pp_data_full, random_state, use_pca)

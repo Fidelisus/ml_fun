@@ -26,7 +26,7 @@ def descriptive_plot(data):
     plt.rcParams['figure.figsize'] = [20, 3]
     data.DataFrame(std_scaler.fit_transform(data.iloc[:, 2:12]), columns=data.iloc[:, 2:12].columns).boxplot()
 
-def runTraining(topic:Topic=breastCancer, classifier:Classifier=decisionTree, testing_ratio=0.2, random_state=234):
+def runTraining(topic:Topic=breastCancer, classifier:Classifier=naiveBayes, testing_ratio=0.2, random_state=234):
     data_training, data_testing, cols = readingData(topic.readingFunction, dataset_location, lines, testing_ratio, random_state)
 
     data_training, data_testing, data_full = preProcess(topic.preProcessingFunction, data_training, data_testing)
@@ -42,12 +42,16 @@ def runTraining(topic:Topic=breastCancer, classifier:Classifier=decisionTree, te
 
     pp_data_training, pp_data_testing, pp_data_full = data_training, data_testing, data_full
 
-    clf = classify(classifier.classifierFunction, random_state, pp_data_training, pp_data_full)
+    use_pca = False
+    clf = classify(classifier.classifierFunction, random_state, pp_data_training, pp_data_full, use_pca = use_pca)
 
-    print(clf.score(pp_data_testing[0], pp_data_testing[1]))
+    if not use_pca:
+        predictions = clf.predict(pp_data_testing[0])
+    else:
+        pca = PCA()
+        predictions = clf.predict(pca.fit_transform(pp_data_testing[0]))
 
     # predictions = clf.predict(pp_data_testing.iloc[:,1:-1])
-    predictions = clf.predict(pp_data_testing[0])
     solution = pd.DataFrame(list(zip(pp_data_testing[1], predictions)), columns=['ID','class']).sort_values(by=['ID'])
     solution.to_csv(dataset_location+topic.solutionFile+".sol.csv", index = False)
 
