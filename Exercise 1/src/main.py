@@ -7,7 +7,7 @@ from classifier import classify
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.metrics import confusion_matrix
 
-dataset_location="./Datasets/"
+dataset_location="./"
 lines=None
 
 def getError(prediction, truth):
@@ -42,9 +42,17 @@ def runTraining(topic:Topic=breastCancer, classifier:Classifier=naiveBayes, test
 
     pp_data_training, pp_data_testing, pp_data_full = data_training, data_testing, data_full
 
+    #Add missing cols when one hot encoding
+    missing_cols = set(pp_data_training[0].columns) - set(pp_data_testing[0].columns)
+    for c in missing_cols:
+        pp_data_testing[0][c] = 0
+    pp_data_testing = tuple((pp_data_testing[0][pp_data_training[0].columns], pp_data_testing[1]))
+
+
     use_pca = False
     clf = classify(classifier.classifierFunction, random_state, pp_data_training, pp_data_full, use_pca = use_pca)
 
+   
     if not use_pca:
         predictions = clf.predict(pp_data_testing[0])
     else:
@@ -57,14 +65,21 @@ def runTraining(topic:Topic=breastCancer, classifier:Classifier=naiveBayes, test
 
     print(confusion_matrix(pp_data_testing[1], predictions))
 
-    score = {
-        "accuracy": accuracy_score(pp_data_testing[1], predictions),
-        "precision": precision_score(pp_data_testing[1], predictions),
-        "recall": recall_score(pp_data_testing[1], predictions)
-    }
+    if topic == purchase:
+        score = {
+            "accuracy": accuracy_score(pp_data_testing[1], predictions),
+            "precision": precision_score(pp_data_testing[1], predictions, average='micro'),
+            "recall": recall_score(pp_data_testing[1], predictions, average='micro')
+        }
+    else :
+        score = {
+            "accuracy": accuracy_score(pp_data_testing[1], predictions),
+            "precision": precision_score(pp_data_testing[1], predictions),
+            "recall": recall_score(pp_data_testing[1], predictions)
+        }
     return json.dumps(score, indent=4)
 
 
 
-print(runTraining())
+print(runTraining(topic=purchase,classifier=naiveBayes))
 #runTraining()

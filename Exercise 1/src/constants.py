@@ -24,6 +24,7 @@ breastCancer = Topic("breast-cancer-diagnostic.shuf", rd_breastCancer, pp_breast
 diabetes = Topic("diabetes", rd_diabetes, pp_diabetes)
 purchase = Topic("purchase600-100cls-15k", rd_purchase, pp_purchase)
 speeddating = Topic("speeddating", rd_speeddating, pp_speeddating)
+speeddating_no = Topic("speeddating", rd_speeddating, pp_speeddating_noScale)
 
 decisionTree = Classifier(pp_decisionTree, clf_decisionTree)
 kNN = Classifier(pp_kNN, clf_kNN)
