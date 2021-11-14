@@ -66,7 +66,7 @@ def pp_speeddating(data, cols):
 	def preprocess(data, is_kaggle_test = False):
 		std_scaler = StandardScaler()
 		data = data.rename(columns={c:c.strip() for c in data.columns})
-		columns_to_drop = ["decision", "decision_o", "has_null"]
+		columns_to_drop = ["decision", "decision_o", "has_null", "match"]
 		if not is_kaggle_test:
 			columns_to_drop.append("class")
 		df_trimmed = data.drop(columns_to_drop, axis=1)
@@ -93,7 +93,7 @@ def pp_speeddating_noScale(data, cols):
 	def preprocess(data, is_kaggle_test = False):
 		std_scaler = StandardScaler()
 		data = data.rename(columns={c:c.strip() for c in data.columns})
-		columns_to_drop = ["decision", "decision_o", "has_null"]
+		columns_to_drop = ["decision", "decision_o", "has_null", "match"]
 		if not is_kaggle_test:
 			columns_to_drop.append("class")
 		df_trimmed = data.drop(columns_to_drop, axis=1)
@@ -115,6 +115,7 @@ def pp_speeddating_noScale(data, cols):
 	Y = data["match"]
 	
 	return X, Y
+	
 def ohe_speed(data):
 	encoder = OneHotEncoder()
 	data = data.rename(columns={c:c.strip() for c in data.columns})
