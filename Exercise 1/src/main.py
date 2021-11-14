@@ -43,10 +43,11 @@ def runTraining(topic:Topic=breastCancer, classifier:Classifier=naiveBayes, test
     pp_data_training, pp_data_testing, pp_data_full = data_training, data_testing, data_full
 
     #Add missing cols when one hot encoding
-    missing_cols = set(pp_data_training[0].columns) - set(pp_data_testing[0].columns)
-    for c in missing_cols:
-        pp_data_testing[0][c] = 0
-    pp_data_testing = tuple((pp_data_testing[0][pp_data_training[0].columns], pp_data_testing[1]))
+    if topic==speeddating or topic==speeddating_no:
+        missing_cols = set(pp_data_training[0].columns) - set(pp_data_testing[0].columns)
+        for c in missing_cols:
+            pp_data_testing[0][c] = 0
+        pp_data_testing = tuple((pp_data_testing[0][pp_data_training[0].columns], pp_data_testing[1]))
 
 
     use_pca = False
@@ -81,5 +82,5 @@ def runTraining(topic:Topic=breastCancer, classifier:Classifier=naiveBayes, test
 
 
 
-print(runTraining(topic=purchase,classifier=naiveBayes))
+print(runTraining(topic=purchase,classifier=decisionTree))
 #runTraining()
