@@ -106,7 +106,6 @@ def nb_pca(pp_data_training, pp_data_full):
     print(best_params)
     return {"var_smoothing": best_params["estimator__var_smoothing"]}
 
-
 def clf_naiveBayes(pp_data_training, pp_data_full, random_state, use_pca):
     if use_pca:
         nb_best_params = nb_pca(pp_data_training, pp_data_full)
@@ -124,6 +123,69 @@ def clf_naiveBayes(pp_data_training, pp_data_full, random_state, use_pca):
 
         nb_optimal.fit(pp_data_training[0], pp_data_training[1])
     return nb_optimal
+
+def tree_ccp_alpha_plot(pp_data_full):
+    params_tree = {
+        'criterion': ['gini'],
+        'max_depth': [9],
+        'splitter': ['random'],
+        'min_samples_split': [0.071],
+        'random_state': [123],
+        'ccp_alpha': np.arange(0, 1, 0.01).tolist(),
+    }
+    tree = GridSearchCV(DecisionTreeClassifier(), params_tree, cv=10, scoring='accuracy')
+    tree.fit(pp_data_full[0], pp_data_full[1])
+
+    test_scores = tree.cv_results_['mean_test_score']
+    param = tree.cv_results_['param_ccp_alpha'].data
+
+    plt.plot(param, test_scores)
+
+    plt.xlabel("param_ccp_alpha")
+    plt.ylabel("accuracy")
+    plt.show()
+
+def tree_max_depth_plot(pp_data_full):
+    params_tree = {
+        'criterion': ['gini'],
+        'max_depth': range(1, 41),
+        'splitter': ['random'],
+        'min_samples_split': [0.071],
+        'random_state': [123],
+    }
+    grid_search_tree = GridSearchCV(DecisionTreeClassifier(), params_tree, cv=10, scoring='accuracy')
+    tree = grid_search_tree.fit(pp_data_full[0], pp_data_full[1])
+
+    test_scores = tree.cv_results_['mean_test_score']
+    param = tree.cv_results_['param_max_depth'].data
+
+    plt.plot(param, test_scores, label = "min_samples_split = 0.071")
+
+    plt.xlabel("max_depth")
+    plt.ylabel("accuracy")
+    plt.legend(loc='right')
+    plt.show()
+
+def tree_min_samples_split_plot(pp_data_full, max_depths = [5, 7, 9]):
+    for depth in max_depths:
+        params_tree = {
+            'criterion': ['gini'],
+            'max_depth': [depth],
+            'splitter': ['random'],
+            'min_samples_split': np.arange(0.001, 0.301, 0.01).tolist(),
+            'random_state': [123],
+        }
+        grid_search_tree = GridSearchCV(DecisionTreeClassifier(), params_tree, cv=10, scoring='accuracy')
+        tree = grid_search_tree.fit(pp_data_full[0], pp_data_full[1])
+
+        test_scores = tree.cv_results_['mean_test_score']
+        param = tree.cv_results_['param_min_samples_split'].data
+        plt.plot(param, test_scores, label = f"max_depth = {depth}")
+
+    plt.xlabel("min_samples_split")
+    plt.ylabel("accuracy")
+    plt.legend(loc='right')
+    plt.show()
 
 def tree_optimal_parameters(pp_data_full, random_state):
     tree_classifier = DecisionTreeClassifier()
@@ -158,6 +220,10 @@ def clf_decisionTree(pp_data_training, pp_data_full, random_state, use_pca):
     # optimal parameters for breastCancer
     tree_best_params = {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
     tree_optimal = DecisionTreeClassifier(**tree_best_params)
+
+    tree_max_depth_plot(pp_data_full)
+    tree_ccp_alpha_plot(pp_data_full)
+    tree_min_samples_split_plot(pp_data_full, max_depths = [5, 7, 9])
 
     tree_optimal.fit(pp_data_training[0], pp_data_training[1])
     return tree_optimal
