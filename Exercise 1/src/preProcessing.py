@@ -24,25 +24,28 @@ speedDatingNominal = ["gender", "d_d_age", "race", "race_o", "samerace", "d_impo
 , "d_expected_num_interested_in_me", "d_expected_num_matches", "d_like", "d_guess_prob_liked"]
 
 
-def pp_breastCancer(data, cols):
-    def preprocess(data, is_kaggle_test = False):
-        std_scaler = StandardScaler()
-        data = data.rename(columns={c:c.strip() for c in data.columns})
-        columns_to_drop = ["ID"]
-        if not is_kaggle_test:
-            columns_to_drop.append("class")
-        df_trimmed = data.drop(columns_to_drop, axis=1)
-        pp_data = pd.DataFrame(std_scaler.fit_transform(df_trimmed), columns=df_trimmed.columns)
-        return pp_data
+def pp_breastCancer(data, scaling, cols):
+	def preprocess(data, is_kaggle_test = False):
+		std_scaler = StandardScaler()
+		data = data.rename(columns={c:c.strip() for c in data.columns})
+		columns_to_drop = ["ID"]
+		if not is_kaggle_test:
+			columns_to_drop.append("class")
+		df_trimmed = data.drop(columns_to_drop, axis=1)
+		if scaling:
+			pp_data = pd.DataFrame(std_scaler.fit_transform(df_trimmed), columns=df_trimmed.columns)
+		else:
+			pp_data = df_trimmed
+		return pp_data
 
-    is_kaggle_test = False
+	is_kaggle_test = False
 
-    X = preprocess(data, is_kaggle_test)
-    Y = data["class"]
+	X = preprocess(data, is_kaggle_test)
+	Y = data["class"]
 
-    return X, Y
+	return X, Y
 
-def pp_diabetes(data, cols):
+def pp_diabetes(data, scaling, cols):
 	def preprocess(data, is_kaggle_test = False):
 		std_scaler = StandardScaler()
 		columns_to_drop = []
@@ -55,7 +58,8 @@ def pp_diabetes(data, cols):
 		cols_with_missing_values.remove("Pregnancies")
 		df_trimmed[cols_with_missing_values] = imputerMean.fit_transform(df_trimmed[cols_with_missing_values].values)
 		#scale values
-		df_trimmed = std_scaler.fit_transform(df_trimmed.values)
+		if scaling:
+			df_trimmed = std_scaler.fit_transform(df_trimmed.values)
 
 		return df_trimmed
 
@@ -66,7 +70,7 @@ def pp_diabetes(data, cols):
 	
 	return X, Y
 
-def pp_purchase(data, cols):
+def pp_purchase(data, scaling, cols):
 	def preprocess(data, is_kaggle_test = False):
 		data = data.rename(columns={c:c.strip() for c in data.columns})
 		columns_to_drop = ["ID"]
@@ -82,7 +86,7 @@ def pp_purchase(data, cols):
 	
 	return X, Y
 
-def pp_speeddating(data, cols):
+def pp_speeddating(data, scaling, cols):
 	def preprocess(data, is_kaggle_test = False):
 		std_scaler = StandardScaler()
 		data = data.rename(columns={c:c.strip() for c in data.columns})
@@ -97,7 +101,8 @@ def pp_speeddating(data, cols):
 		df_trimmed[speedDatingNumeric] = imputerMean.fit_transform(df_trimmed[speedDatingNumeric].values)
 		df_trimmed[speedDatingNominal] = imputerFreq.fit_transform(df_trimmed[speedDatingNominal].values)
 		#scale values
-		df_trimmed[speedDatingNumeric] = std_scaler.fit_transform(df_trimmed[speedDatingNumeric].values)
+		if scaling:
+			df_trimmed[speedDatingNumeric] = std_scaler.fit_transform(df_trimmed[speedDatingNumeric].values)
 		df_trimmed = ohe_speed(df_trimmed)
 
 		return df_trimmed
@@ -108,33 +113,7 @@ def pp_speeddating(data, cols):
 	Y = data["match"]
 	
 	return X, Y
-
-def pp_speeddating_noScale(data, cols):
-	def preprocess(data, is_kaggle_test = False):
-		std_scaler = StandardScaler()
-		data = data.rename(columns={c:c.strip() for c in data.columns})
-		columns_to_drop = ["decision", "decision_o", "has_null", "match"]
-		if not is_kaggle_test:
-			columns_to_drop.append("class")
-		df_trimmed = data.drop(columns_to_drop, axis=1)
-		df_trimmed = df_trimmed.replace(to_replace="?", value=np.nan )
-		imputerMean = SimpleImputer(strategy='median', missing_values=np.nan)
-		imputerFreq = SimpleImputer(strategy='most_frequent', missing_values=np.nan)
-		#compute missing values
-		df_trimmed[speedDatingNumeric] = imputerMean.fit_transform(df_trimmed[speedDatingNumeric].values)
-		df_trimmed[speedDatingNominal] = imputerFreq.fit_transform(df_trimmed[speedDatingNominal].values)
-		#scale values
-		#df_trimmed[speedDatingNumeric] = std_scaler.fit_transform(df_trimmed[speedDatingNumeric].values)
-		df_trimmed = ohe_speed(df_trimmed)
-
-		return df_trimmed
-
-	is_kaggle_test = True
-
-	X = preprocess(data, is_kaggle_test)
-	Y = data["match"]
 	
-	return X, Y
 	
 def ohe_speed(data):
 	encoder = OneHotEncoder()
@@ -160,5 +139,5 @@ def pp_naiveBayes(data, cols):
 	return pp_data
 
 
-def preProcess(preProcessingFunction, data_training, data_testing, cols=None):
-	return preProcessingFunction(data_training, cols), preProcessingFunction(data_testing, cols), preProcessingFunction(pd.concat([data_training, data_testing]), cols)
+def preProcess(preProcessingFunction, data_training, data_testing, scaling, cols=None):
+	return preProcessingFunction(data_training, scaling, cols), preProcessingFunction(data_testing, scaling, cols), preProcessingFunction(pd.concat([data_training, data_testing]), scaling, cols)

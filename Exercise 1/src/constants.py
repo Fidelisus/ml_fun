@@ -18,7 +18,6 @@ breastCancer = Topic("breast-cancer-diagnostic.shuf", rd_breastCancer, pp_breast
 diabetes = Topic("diabetes", rd_diabetes, pp_diabetes)
 purchase = Topic("purchase600-100cls-15k", rd_purchase, pp_purchase)
 speeddating = Topic("speeddating", rd_speeddating, pp_speeddating)
-speeddating_no = Topic("speeddating", rd_speeddating, pp_speeddating_noScale)
 
 decisionTree = Classifier(pp_decisionTree, clf_decisionTree)
 kNN = Classifier(pp_kNN, clf_kNN)
@@ -26,15 +25,9 @@ naiveBayes = Classifier(pp_naiveBayes, clf_naiveBayes)
 
 parameter = {
 	"fixed": {
-		decisionTree: {
-			breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-			diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-			purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-			speeddating: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
-		},
 		kNN: {
 			breastCancer: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
-			diabetes: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
+			diabetes: {'n_neighbors': 30, 'p': 2, 'weights': 'distance'},
 			purchase: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
 			speeddating: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'}
 		},
@@ -43,6 +36,12 @@ parameter = {
 			diabetes: {'var_smoothing': 0.464158883361278},
 			purchase: {'var_smoothing': 0.0774263682681127},
 			speeddating: {'var_smoothing': 3.5938136638046276}
+		},
+		decisionTree: {
+			breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+			diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+			purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+			speeddating: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
 		}
 	},
 	"optimal": {

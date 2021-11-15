@@ -5,6 +5,7 @@ from sklearn.naive_bayes import GaussianNB
 import pandas as pd
 import numpy as np
 
+plt.rcParams['figure.figsize'] = [20, 3]
 
 def knn_plots(knn):
 	test_scores = knn.cv_results_['mean_test_score']
@@ -34,12 +35,8 @@ def nb_plots(nb):
 	plt.show()
 
 def tree_plots(tree):
-	tree_max_depth_plot(tree)
-	tree_ccp_alpha_plot(tree)
-	tree_min_samples_split_plot(tree, max_depths = [5, 7, 9])
-
-def tree_ccp_alpha_plot(tree):
 	params = pd.DataFrame(tree.cv_results_['params'])
+
 	indices = params.index[(params['criterion']=='gini') &
 							(params['max_depth']==9) &
 							(params['splitter']=='random') &
@@ -53,8 +50,6 @@ def tree_ccp_alpha_plot(tree):
 	plt.ylabel("accuracy")
 	plt.show()
 
-def tree_max_depth_plot(tree):
-	params = pd.DataFrame(tree.cv_results_['params'])
 	indices = params.index[(params['criterion']=='gini') &
 							(params['splitter']=='random') &
 							(params['min_samples_split']==0.071) &
@@ -69,9 +64,8 @@ def tree_max_depth_plot(tree):
 	plt.legend(loc='right')
 	plt.show()
 
-def tree_min_samples_split_plot(pp_data_full, max_depths = [5, 7, 9]):
-	for depth in max_depths:
-		params = pd.DataFrame(tree.cv_results_['params'])
+
+	for depth in [5, 7, 9]:
 		indices = params.index[(params['criterion']=='gini') &
 								(params['max_depth']==depth) &
 								(params['splitter']=='random') &

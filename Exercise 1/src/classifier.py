@@ -4,8 +4,8 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
+from time import time
 import numpy as np
-from json import dumps
 
 from optimalParameter import *
 
@@ -17,8 +17,11 @@ def clf_kNN(parameter, pp_data_training, pp_data_full, use_pca):
 		knn_best_params = parameter[1]
 
 	knn_optimal = KNeighborsClassifier(**knn_best_params)
+
+	start_train = time()
 	knn_optimal.fit(pp_data_training[0], pp_data_training[1])
-	return knn_optimal
+	time_train = time()-start_train
+	return knn_optimal, time_train
 
 
 def nb_pca(pp_data_training, pp_data_full):
@@ -43,7 +46,9 @@ def clf_naiveBayes(parameter, pp_data_training, pp_data_full, use_pca):
 		pca = PCA()
 
 		nb_optimal = GaussianNB(**nb_best_params)
+		start_train = time()
 		nb_optimal.fit(pca.fit_transform(pp_data_training[0]), pp_data_training[1])
+		time_train = time()-start_train
 	else:
 		if parameter[0] == "optimal":
 			nb_best_params = nb_optimal_parameters(parameter[1], pp_data_full)
@@ -51,8 +56,10 @@ def clf_naiveBayes(parameter, pp_data_training, pp_data_full, use_pca):
 			nb_best_params = parameter[1]
 		
 		nb_optimal = GaussianNB(**nb_best_params)
+		start_train = time()
 		nb_optimal.fit(pp_data_training[0], pp_data_training[1])
-	return nb_optimal
+		time_train = time()-start_train
+	return nb_optimal, time_train
 
 
 def clf_decisionTree(parameter, pp_data_training, pp_data_full, use_pca):
@@ -62,8 +69,10 @@ def clf_decisionTree(parameter, pp_data_training, pp_data_full, use_pca):
 		tree_best_params = parameter[1]
 
 	tree_optimal = DecisionTreeClassifier(**tree_best_params)
+	start_train = time()
 	tree_optimal.fit(pp_data_training[0], pp_data_training[1])
-	return tree_optimal
+	time_train = time()-start_train
+	return tree_optimal, time_train
 
 
 
