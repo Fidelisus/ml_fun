@@ -43,8 +43,28 @@ def pp_breastCancer(data, cols):
     return X, Y
 
 def pp_diabetes(data, cols):
-	data.iloc[:,-1] = data.iloc[:,-1].astype(bool)
-	return data
+	def preprocess(data, is_kaggle_test = False):
+		std_scaler = StandardScaler()
+		columns_to_drop = []
+		if not is_kaggle_test:
+			columns_to_drop.append("Outcome")
+		df_trimmed = data.drop(columns_to_drop, axis=1)
+		imputerMean = SimpleImputer(strategy='mean', missing_values=0)
+		#compute missing values
+		cols_with_missing_values = list(df_trimmed)
+		cols_with_missing_values.remove("Pregnancies")
+		df_trimmed[cols_with_missing_values] = imputerMean.fit_transform(df_trimmed[cols_with_missing_values].values)
+		#scale values
+		df_trimmed = std_scaler.fit_transform(df_trimmed.values)
+
+		return df_trimmed
+
+	is_kaggle_test = True
+
+	X = preprocess(data, is_kaggle_test)
+	Y = data["Outcome"].astype(bool)
+	
+	return X, Y
 
 def pp_purchase(data, cols):
 	def preprocess(data, is_kaggle_test = False):
@@ -120,7 +140,7 @@ def ohe_speed(data):
 	encoder = OneHotEncoder()
 	data = data.rename(columns={c:c.strip() for c in data.columns})
 	feature_arr = encoder.fit_transform(data[speedDatingNominal]).toarray()
-	feature_labels = encoder.get_feature_names_out()
+	feature_labels = encoder.get_feature_names()
 	feature_labels = np.array(feature_labels).ravel()
 	df_trimmed = data.drop(speedDatingNominal, axis=1).reset_index(drop=True)
 	df_enc = pd.DataFrame(feature_arr, columns=feature_labels)
