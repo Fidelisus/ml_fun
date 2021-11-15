@@ -59,9 +59,9 @@ def runTraining(topic:Topic, classifier:Classifier, parameter, scaling = True, u
 	solution = pd.DataFrame(list(zip(pp_data_testing[1], predictions)), columns=['ID','class']).sort_values(by=['ID'])
 	solution.to_csv(dataset_location+topic.solutionFile+".sol.csv", index = False)
 
+	print("Time for training:", time_train)
+	print("Time for predicting:", time_predict)
 	print(confusion_matrix(pp_data_testing[1], predictions))
-	print(time_train)
-	print(time_predict)
 
 	if topic == purchase:
 		score = {
