@@ -40,7 +40,7 @@ parameter = {
 			},
 			decisionTree: {
 				breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-				diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				diabetes: {'criterion': 'entropy', 'max_depth': 6, 'min_samples_split': 0.151, 'random_state': 123, 'splitter': 'best'},
 				purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.001, 'random_state': 123, 'splitter': 'random'},
 				speeddating: {'criterion': 'gini', 'max_depth': 7, 'min_samples_split': 0.03, 'random_state': 123, 'splitter': 'random'}
 			},
@@ -60,7 +60,7 @@ parameter = {
 			},
 			decisionTree: {
 				breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-				diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				diabetes: {'criterion': 'entropy', 'max_depth': 6, 'min_samples_split': 0.151, 'random_state': 123, 'splitter': 'best'},
 				purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.001, 'random_state': 123, 'splitter': 'random'},
 				speeddating: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
 			}

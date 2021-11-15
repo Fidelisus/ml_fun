@@ -56,7 +56,6 @@ def tree_plots(tree):
 		indices = params.index[(params['criterion']=='gini') &
 								(params['max_depth']==depth) &
 								(params['splitter']=='random') &
-								(params['min_samples_split']==0.071) &
 								(params['random_state']==123)].tolist()
 		param = params['min_samples_split'].iloc[indices]
 		test_scores = pd.DataFrame(tree.cv_results_['mean_test_score']).iloc[indices]

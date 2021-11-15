@@ -17,8 +17,8 @@ lines=None
 
 topic = diabetes
 classifier = decisionTree
-parameter_type = "fixed" # "fixed" / "optimal"
-scaling = False
+parameter_type = "optimal" # "fixed" / "optimal"
+scaling = True
 ################################################################################
 
 
