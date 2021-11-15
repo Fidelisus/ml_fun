@@ -37,7 +37,6 @@ def nb_plots(nb):
 def tree_plots(tree):
 	params = pd.DataFrame(tree.cv_results_['params'])
 
-
 	indices = params.index[(params['criterion']=='gini') &
 							(params['splitter']=='random') &
 							(params['min_samples_split']==0.071) &
