@@ -25,34 +25,48 @@ naiveBayes = Classifier(pp_naiveBayes, clf_naiveBayes)
 
 parameter = {
 	"fixed": {
-		kNN: {
-			breastCancer: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
-			diabetes: {'n_neighbors': 30, 'p': 2, 'weights': 'distance'},
-			purchase: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
-			speeddating: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'}
+		True: {
+			kNN: {
+				breastCancer: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
+				diabetes: {'n_neighbors': 30, 'p': 2, 'weights': 'distance'},
+				purchase: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
+				speeddating: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'}
+			},
+			naiveBayes: {
+				breastCancer: {'var_smoothing': 0.21544346900318845},
+				diabetes: {'var_smoothing': 0.464158883361278},
+				purchase: {'var_smoothing': 0.0774263682681127},
+				speeddating: {'var_smoothing': 3.5938136638046276}
+			},
+			decisionTree: {
+				breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				speeddating: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
+			},
 		},
-		naiveBayes: {
-			breastCancer: {'var_smoothing': 0.21544346900318845},
-			diabetes: {'var_smoothing': 0.464158883361278},
-			purchase: {'var_smoothing': 0.0774263682681127},
-			speeddating: {'var_smoothing': 3.5938136638046276}
-		},
-		decisionTree: {
-			breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-			diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-			purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-			speeddating: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
+		False: {
+				kNN: {
+				breastCancer: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
+				diabetes: {'n_neighbors': 36, 'p': 1, 'weights': 'distance'},
+				purchase: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
+				speeddating: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'}
+			},
+			naiveBayes: {
+				breastCancer: {'var_smoothing': 0.21544346900318845},
+				diabetes: {'var_smoothing': 0.001291549665014884},
+				purchase: {'var_smoothing': 0.0774263682681127},
+				speeddating: {'var_smoothing': 3.5938136638046276}
+			},
+			decisionTree: {
+				breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				speeddating: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
+			}
 		}
 	},
 	"optimal": {
-		decisionTree: {
-			'criterion': ['gini','entropy'],
-			'max_depth': range(1, 41),
-			'splitter': ['best', 'random'],
-			'min_samples_split': np.arange(0.001, 0.3, 0.01).tolist(),
-			'random_state': [123],
-			'ccp_alpha': np.arange(0, 1, 0.001).tolist()
-		},
 		kNN: {
 			'n_neighbors': range(1,41),
 			'p': (1,2),
@@ -60,6 +74,13 @@ parameter = {
 		},
 		naiveBayes: {
 			'var_smoothing': np.logspace(1,-10, num=100)
+		},
+		decisionTree: {
+			'criterion': ['gini','entropy'],
+			'max_depth': range(1, 21),
+			'splitter': ['best', 'random'],
+			'min_samples_split': np.arange(0.001, 0.3, 0.01).tolist(),
+			'random_state': [123]
 		}
 	}
 }

@@ -16,9 +16,9 @@ dataset_location="./Datasets/"
 lines=None
 
 topic = diabetes
-classifier = kNN
+classifier = decisionTree
 parameter_type = "optimal" # "fixed" / "optimal"
-scaling = False
+scaling = True
 ################################################################################
 
 
@@ -79,7 +79,7 @@ def runTraining(topic:Topic, classifier:Classifier, parameter, scaling = True, u
 
 
 if parameter_type == "fixed":
-	parameter = (parameter_type, parameter[parameter_type][classifier][topic])
+	parameter = (parameter_type, parameter[parameter_type][scaling][classifier][topic])
 elif parameter_type == "optimal":
 	parameter = (parameter_type, parameter[parameter_type][classifier])
 else:
