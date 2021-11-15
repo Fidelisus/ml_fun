@@ -29,39 +29,39 @@ parameter = {
 			kNN: {
 				breastCancer: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
 				diabetes: {'n_neighbors': 30, 'p': 2, 'weights': 'distance'},
-				purchase: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
-				speeddating: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'}
+				purchase: {'n_neighbors': 39, 'p': 1, 'weights': 'distance'},
+				speeddating: {'n_neighbors': 6, 'p': 2, 'weights': 'uniform'}
 			},
 			naiveBayes: {
 				breastCancer: {'var_smoothing': 0.21544346900318845},
 				diabetes: {'var_smoothing': 0.464158883361278},
-				purchase: {'var_smoothing': 0.0774263682681127},
+				purchase: {'var_smoothing': 0.21544346900318845},
 				speeddating: {'var_smoothing': 3.5938136638046276}
 			},
 			decisionTree: {
 				breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
 				diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-				purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-				speeddating: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
+				purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.001, 'random_state': 123, 'splitter': 'random'},
+				speeddating: {'criterion': 'gini', 'max_depth': 7, 'min_samples_split': 0.03, 'random_state': 123, 'splitter': 'random'}
 			},
 		},
 		False: {
 				kNN: {
 				breastCancer: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
 				diabetes: {'n_neighbors': 36, 'p': 1, 'weights': 'distance'},
-				purchase: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'},
-				speeddating: {'n_neighbors': 4, 'p': 1, 'weights': 'uniform'}
+				purchase: {'n_neighbors': 39, 'p': 1, 'weights': 'distance'},
+				speeddating: {'n_neighbors': 23, 'p': 1, 'weights': 'distance'}
 			},
 			naiveBayes: {
 				breastCancer: {'var_smoothing': 0.21544346900318845},
 				diabetes: {'var_smoothing': 0.001291549665014884},
-				purchase: {'var_smoothing': 0.0774263682681127},
-				speeddating: {'var_smoothing': 3.5938136638046276}
+				purchase: {'var_smoothing': 0.21544346900318845},
+				speeddating: {'var_smoothing': 0.0774263682681127}
 			},
 			decisionTree: {
 				breastCancer: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
 				diabetes: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
-				purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'},
+				purchase: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.001, 'random_state': 123, 'splitter': 'random'},
 				speeddating: {'criterion': 'gini', 'max_depth': 9, 'min_samples_split': 0.071, 'random_state': 123, 'splitter': 'random'}
 			}
 		}
