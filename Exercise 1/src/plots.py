@@ -38,19 +38,6 @@ def tree_plots(tree):
 	params = pd.DataFrame(tree.cv_results_['params'])
 
 	indices = params.index[(params['criterion']=='gini') &
-							(params['max_depth']==9) &
-							(params['splitter']=='random') &
-							(params['min_samples_split']==0.071) &
-							(params['random_state']==123)].tolist()
-	param = params['ccp_alpha'].iloc[indices]
-	test_scores = pd.DataFrame(tree.cv_results_['mean_test_score']).iloc[indices]
-
-	plt.plot(param.values, test_scores.values)
-	plt.xlabel("ccp_alpha")
-	plt.ylabel("accuracy")
-	plt.show()
-
-	indices = params.index[(params['criterion']=='gini') &
 							(params['splitter']=='random') &
 							(params['min_samples_split']==0.071) &
 							(params['random_state']==123)].tolist()

@@ -17,8 +17,8 @@ lines=None
 
 topic = diabetes
 classifier = decisionTree
-parameter_type = "optimal" # "fixed" / "optimal"
-scaling = True
+parameter_type = "fixed" # "fixed" / "optimal"
+scaling = False
 ################################################################################
 
 
@@ -43,7 +43,7 @@ def runTraining(topic:Topic, classifier:Classifier, parameter, scaling = True, u
 			pp_data_testing[0][c] = 0
 		pp_data_testing = tuple((pp_data_testing[0][pp_data_training[0].columns], pp_data_testing[1]))
 
-	clf, time_train = classify(classifier.classifierFunction, parameter, pp_data_training, pp_data_full, use_pca = use_pca)
+	clf, best_params, best_score, time_train = classify(classifier.classifierFunction, parameter, pp_data_training, pp_data_full, use_pca = use_pca)
 	if not use_pca:
 		start_predict = time()
 		predictions = clf.predict(pp_data_testing[0])
@@ -59,22 +59,24 @@ def runTraining(topic:Topic, classifier:Classifier, parameter, scaling = True, u
 	solution = pd.DataFrame(list(zip(pp_data_testing[1], predictions)), columns=['ID','class']).sort_values(by=['ID'])
 	solution.to_csv(dataset_location+topic.solutionFile+".sol.csv", index = False)
 
-	print("Time for training:", time_train)
-	print("Time for predicting:", time_predict)
+
+	print("Confusion_Matrix [[tn,fp],[fn,tp]]:")
 	print(confusion_matrix(pp_data_testing[1], predictions))
 
+	score = {
+		"Time for training:": time_train,
+		"Time for predicting:": time_predict,
+		"accuracy": accuracy_score(pp_data_testing[1], predictions)
+	}
+	if best_score:
+		score["Best Parameter"] = best_params
+		score["Best accuracy from GridSearchCV"] = best_score
 	if topic == purchase:
-		score = {
-			"accuracy": accuracy_score(pp_data_testing[1], predictions),
-			"precision": precision_score(pp_data_testing[1], predictions, average='macro'),
-			"recall": recall_score(pp_data_testing[1], predictions, average='macro')
-		}
+		score["precision"] = precision_score(pp_data_testing[1], predictions, average='macro')
+		score["recall"] = recall_score(pp_data_testing[1], predictions, average='macro')
 	else :
-		score = {
-			"accuracy": accuracy_score(pp_data_testing[1], predictions),
-			"precision": precision_score(pp_data_testing[1], predictions),
-			"recall": recall_score(pp_data_testing[1], predictions)
-		}
+		score["precision"] = precision_score(pp_data_testing[1], predictions)
+		score["recall"] = recall_score(pp_data_testing[1], predictions)
 	return json.dumps(score, indent=4)
 
 

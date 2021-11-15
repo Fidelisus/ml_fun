@@ -16,10 +16,6 @@ def get_grid_search(clf, par):
 		n_jobs=-1,
 	)
 
-def print_best(clf):
-	print("Parameter:", clf.best_params_)
-	print("Best accuracy from GridSearchCV:", clf.best_score_)
-
 
 
 
@@ -29,9 +25,8 @@ def knn_optimal_parameters(knn_parameters, pp_data_full):
 	grid_search_knn = get_grid_search(knn_classifier, knn_parameters)
 	knn = grid_search_knn.fit(pp_data_full[0], pp_data_full[1])
 
-	print_best(knn)
 	knn_plots(knn)
-	return knn.best_params_
+	return knn.best_params_, knn.best_score_
 
 
 def nb_optimal_parameters(nb_parameters, pp_data_full):
@@ -40,9 +35,8 @@ def nb_optimal_parameters(nb_parameters, pp_data_full):
 	grid_search_nb = get_grid_search(nb_classifier, nb_parameters)
 	nb = grid_search_nb.fit(pp_data_full[0], pp_data_full[1])
 
-	print_best(nb)
 	nb_plots(nb)
-	return nb.best_params_
+	return nb.best_params_, nb.best_score_
 
 
 def tree_optimal_parameters(tree_parameters, pp_data_full):
@@ -51,6 +45,5 @@ def tree_optimal_parameters(tree_parameters, pp_data_full):
 	grid_search_tree = get_grid_search(tree_classifier, tree_parameters)
 	tree = grid_search_tree.fit(pp_data_full[0], pp_data_full[1])
 
-	print_best(tree)
 	tree_plots(tree)
-	return tree.best_params_
+	return tree.best_params_, tree.best_score_
