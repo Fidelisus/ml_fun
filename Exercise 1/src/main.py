@@ -16,9 +16,9 @@ dataset_location="./Datasets/"
 lines=None
 
 topic = diabetes
-classifier = decisionTree
+classifier = naiveBayes
 parameter_type = "optimal" # "fixed" / "optimal"
-scaling = True
+scaling = False
 ################################################################################
 
 
