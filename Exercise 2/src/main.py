@@ -1,40 +1,24 @@
-import pandas as pd
 import json
-from time import time
 from algorithm import *
 from constants import *
-from preProcessing import preProcess
-from sklearn.metrics import accuracy_score, precision_score, recall_score
-from sklearn.metrics import confusion_matrix
+from preProcessing import load_insurance_data
 
 
-################################################################################
-################################ CONFIGURATION #################################
-################################################################################
-dataset_location="../../Datasets/"
-lines=None
 
-topic = diabetes
-cv = 3
-################################################################################
-
-
-def runTraining(topic:Topic, cv=10, random_seed=234):
-	data = pd.read_csv(dataset_location + topic.filename, nrows=lines)
-
-	pp_data = preProcess(topic.preProcessingFunction, data)
+def runTraining():
+	insurance_X_train, insurance_y_train, insurance_X_test, insurance_y_test = load_insurance_data()
 	
-	learnings, bestLearning = simulatedAnnealing(pp_data, cv)
+	learnings, bestLearning = simulatedAnnealing(LISTOFCLFS, insurance_X_train, insurance_y_train)
 
-	bestAlg, bestRMSE, bestParams, bestTimes = bestLearning.getBest()
+	bestAlg, bestMSE, bestParams, bestTimes = bestLearning.getBest()
 
 	output = {
 		"Best Algorithm": bestAlg,
-		"Best RMSE": bestRMSE,
+		"Best MSE": bestMSE,
 		"Best Parameter": bestParams,
 		"Time of best solution:": bestTimes
 	}
 	return json.dumps(output, indent=4)
 
 
-print(runTraining(topic, cv))
+print(runTraining())
