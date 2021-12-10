@@ -68,7 +68,7 @@ class Learning():
 		return min(self.MSEs.values()) - min(other.MSEs.values())
 
 
-def simulatedAnnealing(listOfClfs, X, y, neigborhoodSize=3, cv=10, T_init=10**6, P:float=0.97, g=lambda T,t: T*0.95, num_lastChanges=10, stopAfter=600):
+def simulatedAnnealing(listOfClfs, X, y, neigborhoodSize=2, cv=10, T_init=10**7, P:float=0.97, g=lambda T,t: T*0.95, num_lastChanges=10, stopAfter=600, verbose=False):
 	"""
 		Parameters:
 		X: training features of the data
@@ -99,7 +99,8 @@ def simulatedAnnealing(listOfClfs, X, y, neigborhoodSize=3, cv=10, T_init=10**6,
 	while (time() < start_time+stopAfter):
 		lastChange = 0
 		while (lastChange < num_lastChanges) and (time() < start_time+stopAfter):
-			print(lastChange, T, x.MSEs[x.getBestClf()], start_time+stopAfter-time())
+			if verbose:
+				print(lastChange, T, x.MSEs[x.getBestClf()], start_time+stopAfter-time())
 
 			x_new = x.getNeighbor(neigborhoodSize)
 			learnings.append(x_new)
