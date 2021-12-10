@@ -22,8 +22,8 @@ class Learning():
 		self.calculateScores(params)
 		return self
 
-	def getNeighbor(self):
-		neighborhood = self.getNeigborhood()
+	def getNeighbor(self, neigborhoodSize):
+		neighborhood = self.getNeigborhood(neigborhoodSize)
 
 		l = Learning(self.listOfClfs,self.X, self.y, self.cv)
 		l.calculateScores(neighborhood)
@@ -38,7 +38,7 @@ class Learning():
 			self.times[clf] = sum(scores['fit_time'])/self.cv
 			#self.times[clf] = sum(scores['score_time'])/cv
 
-	def getNeigborhood(self):
+	def getNeigborhood(self, neigborhoodSize):
 		neighborhood = {}
 		for clf, params in self.params.items():
 			neighborhood[clf] = {}
@@ -46,11 +46,9 @@ class Learning():
 				paramRange = clf.paramRanges[param]
 				i = list(paramRange).index(value)
 
-				neighborhood[clf][param] = [paramRange[i]]
-				if i != 0:
-					neighborhood[clf][param].append(paramRange[i-1])
-				if i+1 != len(paramRange):
-					neighborhood[clf][param].append(paramRange[i+1])
+				start = i-neigborhoodSize if i-neigborhoodSize >= 0 else 0
+				end = i+neigborhoodSize if i+neigborhoodSize < len(paramRange) else len(paramRange)-1
+				neighborhood[clf][param] = paramRange[start:end+1]
 		return neighborhood
 
 	def getBestClf(self):
@@ -70,11 +68,15 @@ class Learning():
 		return min(self.MSEs.values()) - min(other.MSEs.values())
 
 
-def simulatedAnnealing(listOfClfs, X, y, cv=10, T_init=10000000, P:float=0.97, g=lambda T,t: T*0.95, num_lastChanges=10, stopAfter=60):
+def simulatedAnnealing(listOfClfs, X, y, neigborhoodSize=3, cv=10, T_init=10**6, P:float=0.97, g=lambda T,t: T*0.95, num_lastChanges=10, stopAfter=600):
 	"""
 		Parameters:
 		X: training features of the data
 		y: target feature of the data
+		neigborhoodSize: number of paramters before and after in list of parameter
+			if its set to 1 the neighborhood of 3 in [1,2,3,4,5,6] would be [2,3,4]
+			if its set to 2 the neighborhood of 3 in [1,2,3,4,5,6] would be [1,2,3,4,5]
+			if its set to 3 the neighborhood of 3 in [1,2,3,4,5,6] would be [1,2,3,4,5,6]
 		cv: how many CV iterations
 		T_init: initial temperatature for SA
 		P: treshold for SA where also bad solutions will be excepted (=1 means greedy)
@@ -92,13 +94,14 @@ def simulatedAnnealing(listOfClfs, X, y, cv=10, T_init=10000000, P:float=0.97, g
 	T = T_init
 	x = Learning(listOfClfs, X, y, cv).getRandom()
 	best = x
+	x_new = x
 	learnings = [x]
 	while (time() < start_time+stopAfter):
 		lastChange = 0
 		while (lastChange < num_lastChanges) and (time() < start_time+stopAfter):
 			print(lastChange, T, x.MSEs[x.getBestClf()], start_time+stopAfter-time())
 
-			x_new = x.getNeighbor()
+			x_new = x.getNeighbor(neigborhoodSize)
 			learnings.append(x_new)
 			if (x_new < x):
 				best = x_new
@@ -106,6 +109,7 @@ def simulatedAnnealing(listOfClfs, X, y, cv=10, T_init=10000000, P:float=0.97, g
 				lastChange = 0
 			else:
 				if (P < e**(-abs(x_new - x) / T)):
+					best = x_new
 					x = x_new
 					lastChange = 0
 				else:
