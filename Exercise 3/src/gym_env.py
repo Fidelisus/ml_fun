@@ -1,12 +1,10 @@
 ## This is not our own code. This code is from https://github.com/haje01/gym-tictactoe to have the environment for the tic tac toe game 
-
+import math
 import logging
-
 import gym
 from gym import spaces
 
 CODE_MARK_MAP = {0: ' ', 1: 'O', 2: 'X'}
-NUM_LOC = 9
 O_REWARD = 1
 X_REWARD = -1
 NO_REWARD = 0
@@ -61,19 +59,22 @@ def check_game_status(board):
             0: draw game,
             1 or 2 for finished game(winner mark code).
     """
+    l = len(board)
+    m = int(math.sqrt(l))
     for t in [1, 2]:
-        for j in range(0, 9, 3):
-            if [t] * 3 == [board[i] for i in range(j, j+3)]:
+        for j in range(0, l, m):
+            if [t] * m == [board[i] for i in range(j, j+m)]:
                 return t
-        for j in range(0, 3):
-            if board[j] == t and board[j+3] == t and board[j+6] == t:
+        for j in range(0, m):
+            if [t] * m == [board[i] for i in range(j, l, m)]:
                 return t
-        if board[0] == t and board[4] == t and board[8] == t:
+        
+        if [t] * m == [board[i] for i in range(0, l, m+1)]:
             return t
-        if board[2] == t and board[4] == t and board[6] == t:
+        if [t] * m == [board[i] for i in range(m-1, l-(m-1), m-1)]:
             return t
 
-    for i in range(9):
+    for i in range(l):
         if board[i] == 0:
             # still playing
             return -1
@@ -85,9 +86,11 @@ def check_game_status(board):
 class TicTacToeEnv(gym.Env):
     metadata = {'render.modes': ['human']}
 
-    def __init__(self, alpha=0.02, show_number=False):
-        self.action_space = spaces.Discrete(NUM_LOC)
-        self.observation_space = spaces.Discrete(NUM_LOC)
+    def __init__(self, size, alpha=0.02, show_number=False):
+        self.size = size
+
+        self.action_space = spaces.Discrete(self.size*self.size)
+        self.observation_space = spaces.Discrete(self.size*self.size)
         self.alpha = alpha
         self.set_start_mark('O')
         self.show_number = show_number
@@ -98,7 +101,7 @@ class TicTacToeEnv(gym.Env):
         self.start_mark = mark
 
     def reset(self):
-        self.board = [0] * NUM_LOC
+        self.board = [0] * (self.size*self.size)
         self.mark = self.start_mark
         self.done = False
         return self._get_obs()
@@ -156,13 +159,12 @@ class TicTacToeEnv(gym.Env):
 
     def _show_board(self, showfn):
         """Draw tictactoe board."""
-        for j in range(0, 9, 3):
+        for j in range(0, self.size*self.size, self.size):
             def mark(i):
                 return tomark(self.board[i]) if not self.show_number or\
                     self.board[i] != 0 else str(i+1)
-            showfn(LEFT_PAD + '|'.join([mark(i) for i in range(j, j+3)]))
-            if j < 6:
-                showfn(LEFT_PAD + '-----')
+            showfn(LEFT_PAD + '|'.join([mark(i) for i in range(j, j+self.size)]))
+            showfn(LEFT_PAD + '-----')
 
     def show_turn(self, human, mark):
         self._show_turn(print if human else logging.info, mark)
