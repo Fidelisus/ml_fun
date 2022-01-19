@@ -1,0 +1,5 @@
+MSE on test data: 5970.4553190489
+R^2 on test data: -0.4381842127959643
+MSE on train data: 6151.471136507264
+R^2 on train data: 0.17903663770164402
+Best hyperparameters: {'data_preprocessor:__choice__': 'NoPreprocessing', 'feature_preprocessor:__choice__': 'no_preprocessing', 'regressor:__choice__': 'random_forest', 'regressor:random_forest:bootstrap': 'True', 'regressor:random_forest:criterion': 'mse', 'regressor:random_forest:max_depth': 'None', 'regressor:random_forest:max_features': 1.0, 'regressor:random_forest:max_leaf_nodes': 'None', 'regressor:random_forest:min_impurity_decrease': 0.0, 'regressor:random_forest:min_samples_leaf': 1, 'regressor:random_forest:min_samples_split': 2, 'regressor:random_forest:min_weight_fraction_leaf': 0.0}

@@ -1,0 +1,6 @@
+MSE on test data: 25930551.06787892
+R^2 on test data: 0.8112584935511092
+MSE on train data: 14906028.553339303
+R^2 on train data: 0.8997880760637741
+Min MSE from algorithm evaluation: 19096774.190798428
+Best hyperparameters: RandomForestRegressor: {'n_estimators': 137, 'max_features': 'auto', 'max_depth': 78, 'min_samples_split': 6, 'min_samples_leaf': 10, 'bootstrap': True}

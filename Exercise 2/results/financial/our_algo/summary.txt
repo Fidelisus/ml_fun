@@ -1,0 +1,6 @@
+MSE on test data: 4653.940504612703
+R^2 on test data: -0.1210575079040892
+MSE on train data: 7909.157124686098
+R^2 on train data: -0.05554071244736769
+Min MSE from algorithm evaluation: 7377.913625803523
+Best hyperparameters: SGDRegressor: {'loss': 'huber', 'penalty': 'elasticnet', 'alpha': 1.0, 'learning_rate': 'invscaling', 'fit_intercept': False, 'l1_ratio': 0.75, 'eta0': 10.0, 'power_t': 8.497534359086681e+92}

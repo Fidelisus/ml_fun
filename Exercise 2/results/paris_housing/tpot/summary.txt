@@ -1,0 +1,5 @@
+MSE on test data: 16785709006.21629
+R^2 on test data: 0.9979434006319411
+MSE on train data: 892226344.6244537
+R^2 on train data: 0.9998925651357897
+Best hyperparameters: SGDRegressor(input_matrix, SGDRegressor__alpha=0.001, SGDRegressor__eta0=0.01, SGDRegressor__fit_intercept=True, SGDRegressor__l1_ratio=1.0, SGDRegressor__learning_rate=invscaling, SGDRegressor__loss=huber, SGDRegressor__penalty=elasticnet, SGDRegressor__power_t=0.1)
