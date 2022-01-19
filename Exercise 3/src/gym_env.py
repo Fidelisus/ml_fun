@@ -1,3 +1,5 @@
+## This is not our own code. This code is from https://github.com/haje01/gym-tictactoe to have the environment for the tic tac toe game 
+
 import logging
 
 import gym
