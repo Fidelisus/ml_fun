@@ -1,12 +1,19 @@
 #!/usr/bin/env python
 import sys
 import click
+import pickle
 
 from PyQt5.QtWidgets import QApplication
 from window import Window
 from gym_env import TicTacToeEnv, agent_by_mark, next_mark
 
+from mc_agent import MCAgent
 
+def get_trained_agent(mark):
+    with open('Exercise 3/q_array_dumps/perfect_model.pkl', 'rb') as f:
+        Q = pickle.load(f)
+    print(str(Q)[:10000])
+    return MCAgent(mark, 0, 0, Q)
 
 @click.command(help="Play human agent.")
 @click.option('-n', '--show-number', is_flag=True, default=False,

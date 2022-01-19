@@ -97,7 +97,7 @@ class Window(QMainWindow, gym.Env):
 
     
     def human_turn(self):
-        state, mark, _ = self.before_turn()
+        _, mark, _ = self.before_turn()
 
         clicked_button = self.sender()
         clicked_button.setText(mark)
@@ -127,8 +127,7 @@ class Window(QMainWindow, gym.Env):
         for button in self.buttons:
             button.setEnabled(False)
 
-        state = self.game._get_obs()
-        _,mark = state
+        state, mark = self.game._get_obs()
         ava_actions = self.game.available_actions()
         return state, mark, ava_actions
 

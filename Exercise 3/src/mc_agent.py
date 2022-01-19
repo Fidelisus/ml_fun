@@ -33,7 +33,7 @@ class MCAgent(object):
         if not state in self.Q:
             self.Q[state] = default_actions.copy()
 
-        r = random.random()
+        r = random.uniform(0, 1)
         if r < self.epsilon:
             return self.get_random_action(actions)
         else:
@@ -90,7 +90,7 @@ def learn(alpha, epsilon, episode_count, Q):
             Q[state][action] += alpha * (reward - Q[state][action])
 
         reward_list.append(reward)
-        start_mark = next_mark(start_mark)
+        #start_mark = next_mark(start_mark)
     return reward_list
 
 def evaluate_agent():
@@ -104,12 +104,13 @@ def evaluate_agent():
     print(reward_list.count(0))
     print("% of non-draw games", (episode_count-reward_list.count(0))/episode_count)
 
-episode_count = 50000
-Q = {}
+if __name__ == "__main__":
+    episode_count = 1000000
+    Q = {}
 
-learn(0.5, 0.05, episode_count, Q)
+    learn(0.5, 0.2, episode_count, Q)
 
-with open('Exercise 3/q_array_dumps/perfect_model.pkl', 'wb') as f:
-    pickle.dump(Q, f)
+    with open('Exercise 3/q_array_dumps/perfect_model.pkl', 'wb') as f:
+        pickle.dump(Q, f)
 
-evaluate_agent()
+    evaluate_agent()
