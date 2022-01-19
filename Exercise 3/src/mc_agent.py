@@ -104,12 +104,13 @@ def evaluate_agent():
     print(reward_list.count(0))
     print("% of non-draw games", (episode_count-reward_list.count(0))/episode_count)
 
-episode_count = 50000
-Q = {}
+if __name__ == "__main__":
+    episode_count = 50000
+    Q = {}
 
-learn(0.5, 0.05, episode_count, Q)
+    learn(0.5, 0.05, episode_count, Q)
 
-with open('Exercise 3/q_array_dumps/perfect_model.pkl', 'wb') as f:
-    pickle.dump(Q, f)
+    with open('Exercise 3/q_array_dumps/perfect_model.pkl', 'wb') as f:
+        pickle.dump(Q, f)
 
-evaluate_agent()
+    evaluate_agent()
