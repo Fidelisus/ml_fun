@@ -4,8 +4,7 @@ import click
 
 from PyQt5.QtWidgets import QApplication
 from window import Window
-from agent import *
-from env import TicTacToeEnv, agent_by_mark, next_mark
+from gym_env import TicTacToeEnv, agent_by_mark, next_mark
 
 
 
@@ -13,11 +12,10 @@ from env import TicTacToeEnv, agent_by_mark, next_mark
 @click.option('-n', '--show-number', is_flag=True, default=False,
               show_default=True, help="Show location number in the board.")
 def play(show_number):
-    agents = [HumanAgent('O'), BaseAgent('X')]
     game = TicTacToeEnv()
 
     app = QApplication(sys.argv)
-    window = Window(3, 3, game, agents)
+    window = Window(3, 3, game)
     sys.exit(app.exec_())
     
 
