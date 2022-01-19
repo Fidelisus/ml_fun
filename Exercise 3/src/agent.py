@@ -1,5 +1,5 @@
 import random
-from env import check_game_status, after_action_state, tomark
+from gym_env import check_game_status, after_action_state, tomark
 
 class HumanAgent(object):
     def __init__(self, mark):

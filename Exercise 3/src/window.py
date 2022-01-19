@@ -34,9 +34,9 @@ class Window(QMainWindow, gym.Env):
         for i in range(self.m):
             for j in range(self.n):
                 button = button = QPushButton(' ', self)
-                button.setToolTip(str(i*j + j + 1))
-                button.setGeometry(	HORIZONTAL_SPACE + (HORIZONTAL_SPACE+HORIZONTAL_BUTTON_SIZE)*i,
-                                    VERTICAL_SPACE + (VERTICAL_SPACE+VERTICAL_BUTTON_SIZE)*j,
+                button.setToolTip(str(self.n*i + j + 1))
+                button.setGeometry(	HORIZONTAL_SPACE + (HORIZONTAL_SPACE+HORIZONTAL_BUTTON_SIZE)*j,
+                                    VERTICAL_SPACE + (VERTICAL_SPACE+VERTICAL_BUTTON_SIZE)*i,
                                     HORIZONTAL_BUTTON_SIZE,
                                     VERTICAL_BUTTON_SIZE)
                 button.clicked.connect(self.human_turn)
@@ -76,7 +76,7 @@ class Window(QMainWindow, gym.Env):
     def ai_turn(self, agent):
         ava_actions = self.game.available_actions()
         state = self.game._get_obs()
-        _,mark = state
+        state, mark = state
         action = agent.act(state, ava_actions)
         clicked_button = self.buttons[action]
         clicked_button.setText(mark)
