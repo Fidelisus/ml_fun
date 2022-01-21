@@ -6,7 +6,7 @@ from agent import HumanAgent, MCAgent
 
 def play():
     env = TicTacToeEnv(3)
-    agents = [HumanAgent('O'), MCAgent('X', 0.2, {})]
+    agents = [HumanAgent('O'), MCAgent('X', 0.2, {}, False)]
     episode = 0
     while True:
         state = env.reset()

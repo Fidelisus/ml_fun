@@ -17,10 +17,17 @@ EPSILON = 0.2
 Q_VALUES = {}
 with open(FILE, 'rb') as f:
     LOADED = pickle.load(f)
-POSSIBLE_AGENTS = [HumanAgent(""), BaseAgent(""), MCAgent("", 0, LOADED), MCAgent("", 0, Q_VALUES), MCAgent("", 0, {})]
+POSSIBLE_AGENTS = [ HumanAgent(""),
+                    BaseAgent(""),
+                    MCAgent("", 0, LOADED, False),
+                    MCAgent("", 0, LOADED, True),
+                    MCAgent("", 0, Q_VALUES, False),
+                    MCAgent("", 0, Q_VALUES, True),
+                    MCAgent("", 0, {}, False),
+                    MCAgent("", 0, {}, True)]
 MARKS = ['O', 'X']
 SELECTED_AGENTS = (4, 1)
-AI_AGENT = copy.copy(POSSIBLE_AGENTS[2])
+AI_AGENT = copy.copy(POSSIBLE_AGENTS[3])
 #TIME_USED_PER_TURN_AGENT = 0.5
 
 HORIZONTAL_SPACE = 12
@@ -256,7 +263,7 @@ class Window(QMainWindow):
         self.reset_button.setEnabled(False)
 
 
-        agents = [MCAgent(MARKS[0], epsilon, Q), MCAgent(MARKS[1], epsilon, Q)]
+        agents = [MCAgent(MARKS[0], epsilon, Q, True), MCAgent(MARKS[1], epsilon, Q, True)]
         self.game.set_start_mark(MARKS[0])
 
         for i in range(episode_count):

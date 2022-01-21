@@ -7,7 +7,7 @@ from agent import MCAgent
 
 def learn(alpha, epsilon, episode_count, Q):
     env = TicTacToeEnv(3)
-    agents = [MCAgent('O', epsilon, Q), MCAgent('X', epsilon, Q)]
+    agents = [MCAgent('O', epsilon, Q, True), MCAgent('X', epsilon, Q, True)]
 
     start_mark = 'O'
     reward_list = []

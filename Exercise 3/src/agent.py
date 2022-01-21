@@ -44,19 +44,27 @@ class BaseAgent(object):
 
 
 class MCAgent(object):
-    def __init__(self, mark, epsilon, Q):
+    def __init__(self, mark, epsilon, Q, winning_strategy):
         self.mark = mark
         self.epsilon = epsilon
         self.Q = Q
+        self.winning_strategy = winning_strategy
 
     def act(self, state, actions):
-        return self.egreedy(state, actions)
-
-    def egreedy(self, state, actions):
         if not state in self.Q:
             l = len(state)
             self.Q[state] = {k:v for k,v in zip(range(l), [0]*l)}
 
+        if self.winning_strategy:
+            for action in actions:
+                nstate = after_action_state((state, self.mark), action)
+                gstatus = check_game_status(nstate[0])
+                if gstatus > 0:
+                    if tomark(gstatus) == self.mark:
+                        return action
+        return self.egreedy(state, actions)
+
+    def egreedy(self, state, actions):
         r = random.uniform(0, 1)
         if r < self.epsilon:
             return self.get_random_action(actions)
@@ -84,4 +92,4 @@ class MCAgent(object):
         return len(list(filter(lambda vs: sum(vs.values())!=0, self.Q.values())))
 
     def __str__(self):
-        return f"MCAgent({self.epsilon}, {self.count_learned()})"
+        return f"MCAgent({self.count_learned()}, {self.winning_strategy})"
