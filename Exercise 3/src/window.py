@@ -11,18 +11,17 @@ from agent import *
 
 
 FILE = 'models/perfect_model.pkl'
-ALPHA = 0.5
+ALPHA = 0.3
 EPSILON = 0.2
 
 Q_VALUES = {}
 with open(FILE, 'rb') as f:
     LOADED = pickle.load(f)
-POSSIBLE_AGENTS = [HumanAgent(""), BaseAgent(""), MCAgent("", 0, Q_VALUES), MCAgent("", 0, LOADED), MCAgent("", 0, {})]
-
+POSSIBLE_AGENTS = [HumanAgent(""), BaseAgent(""), MCAgent("", 0, LOADED), MCAgent("", 0, Q_VALUES), MCAgent("", 0, {})]
 MARKS = ['O', 'X']
-SELECTED_AGENTS = (0, 1)
+SELECTED_AGENTS = (4, 1)
 AI_AGENT = copy.copy(POSSIBLE_AGENTS[2])
-TIME_USED_PER_TURN_AGENT = 0.5
+#TIME_USED_PER_TURN_AGENT = 0.5
 
 HORIZONTAL_SPACE = 12
 VERTICAL_SPACE = 12
@@ -41,7 +40,7 @@ class Window(QMainWindow):
         self.game = game
         self.size = game.size
         self.state_action_list = []
-        self.agents = [copy.deepcopy(POSSIBLE_AGENTS[SELECTED_AGENTS[0]]), copy.deepcopy(POSSIBLE_AGENTS[SELECTED_AGENTS[1]])]
+        self.agents = [copy.copy(POSSIBLE_AGENTS[SELECTED_AGENTS[0]]), copy.copy(POSSIBLE_AGENTS[SELECTED_AGENTS[1]])]
         self.current_agent_index = 0
         self.current_agent = self.agents[self.current_agent_index]
 

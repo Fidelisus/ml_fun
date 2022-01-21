@@ -1,4 +1,5 @@
 import random
+from time import time
 
 from gym_env import check_game_status, after_action_state, tomark
 
@@ -66,19 +67,12 @@ class MCAgent(object):
         return random.choice(actions)
 
     def get_best_action(self, state, actions):
-        values = []
-
-        for action in actions:
-            action_val = self.get_state_val(state, action)
-            values.append(action_val)
+        values = [self.get_state_val(state, action) for action in actions]
 
         if self.mark == 'O':
             indices = [i for i, v in enumerate(values) if v == max(values)]
         else:
             indices = [i for i, v in enumerate(values) if v == min(values)]
-
-        if indices == []:
-            pass
 
         i = random.choice(indices)
         return actions[i]
@@ -86,5 +80,8 @@ class MCAgent(object):
     def get_state_val(self, state, action):
         return self.Q[state][action]
 
+    def count_learned(self):
+        return len(list(filter(lambda vs: sum(vs.values())!=0, self.Q.values())))
+
     def __str__(self):
-        return f"MCAgent({self.epsilon}, {len(self.Q)})"
+        return f"MCAgent({self.epsilon}, {self.count_learned()})"

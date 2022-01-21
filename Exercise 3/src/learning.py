@@ -49,7 +49,7 @@ if __name__ == "__main__":
     episode_count = 100000
     Q = {}
 
-    learn(0.5, 0.2, episode_count, Q)
+    learn(0.3, 0.2, episode_count, Q)
 
     with open('src/models/perfect_model_real.pkl', 'wb') as f:
         pickle.dump(Q, f)
