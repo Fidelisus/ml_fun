@@ -4,6 +4,12 @@ import pickle
 from gym_env import TicTacToeEnv, agent_by_mark
 from agent import MCAgent
 
+FILE = 'models/perfect_model.pkl'
+ALPHA = 0.3
+EPSILON = 0.2
+EPISODE_COUNT = 100000
+EPISODE_COUNT_TEST = 1000
+SHOW_TEST_RESULTS = 100
 
 def learn(alpha, epsilon, episode_count, Q):
     env = TicTacToeEnv(3)
@@ -35,23 +41,20 @@ def learn(alpha, epsilon, episode_count, Q):
     return reward_list
 
 def evaluate_agent():
-    with open('src/models/perfect_model_real.pkl', 'rb') as f:
+    with open(FILE, 'rb') as f:
         Q = pickle.load(f)
 
-    episode_count = 1000
-
-    reward_list = learn(0, 0, episode_count, Q)
-    print("Reward list: ", reward_list[0:100])
+    reward_list = learn(0, 0, EPISODE_COUNT_TEST, Q)
+    print("Reward list: ", reward_list[:SHOW_TEST_RESULTS])
     print(reward_list.count(0))
-    print("% of non-draw games", (episode_count-reward_list.count(0))/episode_count)
+    print("% of non-draw games", (EPISODE_COUNT_TEST-reward_list.count(0))/EPISODE_COUNT_TEST)
 
 if __name__ == "__main__":
-    episode_count = 100000
     Q = {}
 
-    learn(0.3, 0.2, episode_count, Q)
+    learn(ALPHA, EPSILON, EPISODE_COUNT, Q)
 
-    with open('src/models/perfect_model_real.pkl', 'wb') as f:
+    with open(FILE, 'wb') as f:
         pickle.dump(Q, f)
 
     evaluate_agent()
