@@ -4,7 +4,7 @@ import pickle
 from gym_env import TicTacToeEnv, agent_by_mark
 from agent import MCAgent
 
-FILE = 'models/perfect_model.pkl'
+FILE = 'models/perfect_model_real.pkl'
 ALPHA = 0.3
 EPSILON = 0.2
 EPISODE_COUNT = 100000
@@ -18,7 +18,6 @@ def learn(alpha, epsilon, episode_count, Q):
     start_mark = 'O'
     reward_list = []
     for i in range(episode_count):
-
         env.set_start_mark(start_mark)
         state, mark = env.reset()
 

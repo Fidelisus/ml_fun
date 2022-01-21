@@ -274,7 +274,6 @@ class Window(QWidget):
         for button in self.learn_buttons:
             button.setEnabled(False)
 
-
         agents = [MCAgent(MARKS[0], epsilon, Q, True), MCAgent(MARKS[1], epsilon, Q, True)]
         self.game.set_start_mark(MARKS[0])
 
