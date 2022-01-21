@@ -165,7 +165,7 @@ class Window(QMainWindow):
         clicked_button.setText(mark)
         clicked_button.setEnabled(False)
 
-        #self.after_turn(mark, action)
+        self.after_turn(mark, action)
 
 
     def before_turn(self):
