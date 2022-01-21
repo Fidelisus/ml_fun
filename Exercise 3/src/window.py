@@ -1,7 +1,7 @@
-import time
 import pickle
 import copy
 from os.path import exists
+#from time import sleep
 from functools import partial
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QComboBox, QWidget, QVBoxLayout, QLabel, QProgressBar
 from PyQt5.QtGui import QFont
@@ -10,22 +10,19 @@ from gym_env import check_game_status, agent_by_mark
 from agent import *
 
 
-FILE = 'models/perfect_model.2.pkl'
-EPISODE_COUNT = 0
+FILE = 'models/perfect_model.pkl'
 ALPHA = 0.5
 EPSILON = 0.2
 
-TIME_USED_PER_TURN_AGENT = 0.5
-SELECTED_AGENTS = (0, 1)
-if exists(FILE):
-    with open(FILE, 'rb') as f:
-        Q_VALUES = pickle.load(f)
-else:
-    Q_VALUES = {}
-POSSIBLE_AGENTS = [HumanAgent(""), BaseAgent(""), MCAgent("", 0, Q_VALUES), MCAgent("", 0, {})]
+Q_VALUES = {}
+with open(FILE, 'rb') as f:
+    LOADED = pickle.load(f)
+POSSIBLE_AGENTS = [HumanAgent(""), BaseAgent(""), MCAgent("", 0, Q_VALUES), MCAgent("", 0, LOADED), MCAgent("", 0, {})]
 
-AI_AGENT = copy.deepcopy(POSSIBLE_AGENTS[2])
 MARKS = ['O', 'X']
+SELECTED_AGENTS = (0, 1)
+AI_AGENT = copy.copy(POSSIBLE_AGENTS[2])
+TIME_USED_PER_TURN_AGENT = 0.5
 
 HORIZONTAL_SPACE = 12
 VERTICAL_SPACE = 12
@@ -105,7 +102,7 @@ class Window(QMainWindow):
         for j in range(1,3):
             for i in range(1,3):
                 episode_count = 10**(2*j+i)
-                button = button = QPushButton(f'learn 10**{(2*j+i)}', self)
+                button = button = QPushButton(f'learn 10^{(2*j+i)}', self)
                 button.setToolTip(str(episode_count))
                 button.setGeometry(	HORIZONTAL_SPACE + (HORIZONTAL_SPACE+HORIZONTAL_BUTTON_SIZE) + ((HORIZONTAL_NORMAL_BUTTON_SIZE*(self.size - 2)+HORIZONTAL_SPACE*(self.size - 3))//2)*(i-1),
                                     VERTICAL_SPACE*2 + (VERTICAL_SPACE+VERTICAL_BUTTON_SIZE)*self.size + VERTICAL_NORMAL_BUTTON_SIZE + (VERTICAL_NORMAL_BUTTON_SIZE//2)*(j-1),
@@ -160,12 +157,15 @@ class Window(QMainWindow):
         else:
             action = self.current_agent.act(state, ava_actions)
         self.state_action_list.append((state, action))
+
+        #if not any(isinstance(agent, HumanAgent) for agent in self.agents):
+            #sleep(TIME_USED_PER_TURN_AGENT)
         
         clicked_button = self.buttons[action]
         clicked_button.setText(mark)
         clicked_button.setEnabled(False)
 
-        self.after_turn(mark, action)
+        #self.after_turn(mark, action)
 
 
     def before_turn(self):
@@ -233,11 +233,11 @@ class Window(QMainWindow):
     def set_agents(self):
         first_index = self.first_agent.currentIndex()
         POSSIBLE_AGENTS[first_index].mark = MARKS[0]
-        self.agents[0] = copy.deepcopy(POSSIBLE_AGENTS[first_index])
+        self.agents[0] = copy.copy(POSSIBLE_AGENTS[first_index])
 
         second_index = self.second_agent.currentIndex()
         POSSIBLE_AGENTS[second_index].mark = MARKS[1]
-        self.agents[1] = copy.deepcopy(POSSIBLE_AGENTS[second_index])
+        self.agents[1] = copy.copy(POSSIBLE_AGENTS[second_index])
 
         if self.game.done:
             self.reset()
@@ -278,7 +278,7 @@ class Window(QMainWindow):
                 Q[state][action] += alpha * (reward - Q[state][action])
             self.progressbar.setValue(int(((i+1)/episode_count)*100))
 
-        with open(FILE, 'wb') as f:
+        with open(f"{FILE}_{episode_count}", 'wb') as f:
             pickle.dump(Q, f)
         
         self.reset()
