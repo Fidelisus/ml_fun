@@ -7,7 +7,7 @@ from agent import MCAgent
 FILE = 'models/perfect_model_real.pkl'
 ALPHA = 0.3
 EPSILON = 0.2
-EPISODE_COUNT = 100000
+EPISODE_COUNT = 1000
 EPISODE_COUNT_TEST = 1000
 SHOW_TEST_RESULTS = 100
 
@@ -37,6 +37,8 @@ def learn(alpha, epsilon, episode_count, Q):
             Q[state][action] += alpha * (reward - Q[state][action])
 
         reward_list.append(reward)
+        if i%(EPISODE_COUNT//100) == 0:
+            print(f"{str(i//(EPISODE_COUNT//100)).rjust(3)}% of games are played")
     return reward_list
 
 def evaluate_agent():

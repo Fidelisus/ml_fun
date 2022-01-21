@@ -31,7 +31,7 @@ for agent in POSSIBLE_AGENTS:
 MARKS = ['O', 'X']
 SELECTED_AGENTS = (0, 3)
 SELECTED_AI_AGENTS = 3
-TIME_USED_PER_TURN_AGENT = 0.3
+TIME_USED_PER_TURN_AGENT = 0.4
 
 HORIZONTAL_SPACE = 12
 VERTICAL_SPACE = 12
@@ -43,12 +43,11 @@ VERTICAL_NORMAL_BUTTON_SIZE = 50
 VERTICAL_PROGRESSBAR_SIZE = 12
 
 
- 
-class Window(QWidget):
-    def __init__(self, game):
+class Game(QWidget):
+    def __init__(self, env):
         super().__init__()
-        self.game = game
-        self.size = game.size
+        self.env = env
+        self.size = env.size
         self.state_action_list = []
         self.agents = [copy.copy(POSSIBLE_AGENTS[SELECTED_AGENTS[0]]), copy.copy(POSSIBLE_AGENTS[SELECTED_AGENTS[1]])]
         self.current_agent_index = 0
@@ -184,12 +183,12 @@ class Window(QWidget):
     def before_turn(self):
         self.set_enable_all_buttons(False)
 
-        state, mark = self.game._get_obs()
-        ava_actions = self.game.available_actions()
+        state, mark = self.env._get_obs()
+        ava_actions = self.env.available_actions()
         return state, mark, ava_actions
 
     def after_turn(self, mark, action):
-        state, reward, done, info = self.game.step(action)
+        state, reward, done, info = self.env.step(action)
         clicked_button = self.buttons[action]
         clicked_button.setText(mark)
         clicked_button.setEnabled(False)
@@ -219,7 +218,7 @@ class Window(QWidget):
 
 
     def reset(self):
-        self.game.reset()
+        self.env.reset()
         self.current_agent_index = 0
         self.label.setText(f"{MARKS[0]}'s turn.")
         self.update_agent_lists()
@@ -232,7 +231,7 @@ class Window(QWidget):
         self.game_play()
 
     def finish(self, mark, reward):
-        status = check_game_status(self.game.board)
+        status = check_game_status(self.env.board)
         assert status >= 0
         if status == 0:
             self.label.setText("DRAW")
@@ -254,7 +253,7 @@ class Window(QWidget):
         POSSIBLE_AGENTS[second_index].mark = MARKS[1]
         self.agents[1] = copy.copy(POSSIBLE_AGENTS[second_index])
 
-        if self.game.done:
+        if self.env.done:
             self.reset()
         else:
             self.game_play()
@@ -275,20 +274,20 @@ class Window(QWidget):
             button.setEnabled(False)
 
         agents = [MCAgent(MARKS[0], epsilon, Q, True), MCAgent(MARKS[1], epsilon, Q, True)]
-        self.game.set_start_mark(MARKS[0])
+        self.env.set_start_mark(MARKS[0])
 
         for i in range(episode_count):
             done = False
-            state, mark = self.game.reset()
+            state, mark = self.env.reset()
             self.state_action_list = []
             while not done:
                 agent = agent_by_mark(agents, mark)
-                actions = self.game.available_actions()
+                actions = self.env.available_actions()
                 action = agent.act(state, actions)
 
                 self.state_action_list.append((state, action))
 
-                state, reward, done, _ = self.game.step(action)
+                state, reward, done, _ = self.env.step(action)
                 state, mark = state
 
             for state, action in self.state_action_list:

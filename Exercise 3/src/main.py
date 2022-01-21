@@ -1,18 +1,17 @@
 #!/usr/bin/env python
 import sys
-from PyQt5.QtWidgets import QApplication
+from PyQt5.QtWidgets import QApplication, QMainWindow
 
 from gym_env import TicTacToeEnv
-
-from window import Window
+from game import Game
 
 BOARD_SIZE = 3
 
 def play():
-    game = TicTacToeEnv(BOARD_SIZE)
+    env = TicTacToeEnv(BOARD_SIZE)
 
     app = QApplication(sys.argv)
-    window = Window(game)
+    game = Game(env)
     sys.exit(app.exec_())
     
 if __name__ == '__main__':
